@@ -1,0 +1,3 @@
+C:/Users/10633/Desktop/Mico_eye/cmake-build-minsizerel-stm32/CMakeFiles/STM32H750XBH6.elf.dir
+C:/Users/10633/Desktop/Mico_eye/cmake-build-minsizerel-stm32/CMakeFiles/edit_cache.dir
+C:/Users/10633/Desktop/Mico_eye/cmake-build-minsizerel-stm32/CMakeFiles/rebuild_cache.dir

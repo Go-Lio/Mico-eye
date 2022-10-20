@@ -49,6 +49,7 @@ MEMORY
   RAM_D2 (xrw)   : ORIGIN = 0x30000000, LENGTH = 288K
   RAM_D3 (xrw)   : ORIGIN = 0x38000000, LENGTH = 64K
   ITCMRAM (xrw)  : ORIGIN = 0x00000000, LENGTH = 64K
+  EXT1FLASH (rx)   : ORIGIN = 0x90000000, LENGTH = 8M
 }
 
 /* Define output sections */
@@ -151,6 +152,12 @@ SECTIONS
     __bss_end__ = _ebss;
   } >DTCMRAM
 
+  .ext1flash_section :
+  {
+    . = ALIGN(4);
+    KEEP(*(.ExternalFlashSection))
+  } > EXT1FLASH
+
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
@@ -171,6 +178,13 @@ SECTIONS
   }
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
+  
+/*  ExtFlashSection :{
+      *(ExtFlashSection ExtFlashSection.*)
+      *(.gnu.linkonce.r*)
+      . = ALIGN(4);
+    } >QSPIFLASH
+    */
 }
 
 

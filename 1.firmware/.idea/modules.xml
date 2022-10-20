@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Mico_eye.iml" filepath="$PROJECT_DIR$/.idea/Mico_eye.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/1.firmware.iml" filepath="$PROJECT_DIR$/.idea/1.firmware.iml" />
     </modules>
   </component>
 </project>

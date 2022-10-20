@@ -29,7 +29,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd_spi_169.h"
-
+#include <stdio.h>
+#include "ai_datatypes_defines.h"
+#include "ai_platform.h"
+#include "network.h"
+#include "network_data.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,7 +43,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define Camera_Buffer    0x24000000    // ÉãÏñÍ·Í¼Ïñ»º³åÇø
+#define Camera_Buffer    0x24000000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -72,7 +76,10 @@ static void MPU_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	ai_i8 *im=0;
+	ai_network_params ai_params = {
+	    AI_NETWORK_DATA_WEIGHTS(ai_network_data_weights_get())
+	  };
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -102,20 +109,19 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_SPI5_Init();
   MX_USART1_UART_Init();
   MX_CRC_Init();
+  MX_DMA_Init();
   MX_DCMI_Init();
   MX_QUADSPI_Init();
-  MX_DMA_Init();
-  MX_SPI5_Init();
   /* USER CODE BEGIN 2 */
     __HAL_DCMI_ENABLE_IT(&hdcmi, DCMI_IT_FRAME);
     SPI_LCD_Init();
-    DCMI_OV5640_Init();   			 	// DCMIÒÔ¼°OV5640³õÊ¼»¯
+    DCMI_OV5640_Init();
     OV5640_AF_Download_Firmware();
     OV5640_AF_Trigger_Constant();
-
-    OV5640_DMA_Transmit_Continuous(Camera_Buffer, Display_BufferSize);  // Æô¶¯DMAÁ¬Ðø´«Êä
+    OV5640_DMA_Transmit_Continuous(Camera_Buffer, Display_BufferSize);  // ï¿½ï¿½ï¿½ï¿½DMAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,7 +130,7 @@ int main(void)
         if (OV5640_FrameState == 1)
         {
             OV5640_FrameState = 0;
-            LCD_CopyBuffer(0, 0, Display_Width, Display_Height, (uint16_t *) Camera_Buffer);    // ½«Í¼ÏñÊý¾Ý¸´ÖÆµ½ÆÁÄ»
+            LCD_CopyBuffer(0, 0, Display_Width, Display_Height, (uint16_t *) Camera_Buffer);    // ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½Æµï¿½ï¿½ï¿½Ä»
             //HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
         }
     /* USER CODE END WHILE */
@@ -165,12 +171,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 5;
-  RCC_OscInitStruct.PLL.PLLN = 192;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 480;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  RCC_OscInitStruct.PLL.PLLQ = 20;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_1;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -223,6 +229,17 @@ void MPU_Config(void)
   MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
   MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.BaseAddress = 0x90000000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_8MB;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /* Enables the MPU */

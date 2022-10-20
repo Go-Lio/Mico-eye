@@ -1,0 +1,16 @@
+../Core/Src/sccb.c:35:6:SCCB_GPIO_Config	48	static
+../Core/Src/sccb.c:68:6:SCCB_Delay	8	static
+../Core/Src/sccb.c:85:6:SCCB_Start	8	static
+../Core/Src/sccb.c:105:6:SCCB_Stop	8	static
+../Core/Src/sccb.c:126:6:SCCB_ACK	8	static
+../Core/Src/sccb.c:150:6:SCCB_NoACK	8	static
+../Core/Src/sccb.c:171:9:SCCB_WaitACK	8	static
+../Core/Src/sccb.c:201:9:SCCB_WriteByte	16	static
+../Core/Src/sccb.c:233:9:SCCB_ReadByte	24	static
+../Core/Src/sccb.c:268:9:SCCB_WriteHandle	8	static
+../Core/Src/sccb.c:294:9:SCCB_WriteReg	16	static
+../Core/Src/sccb.c:322:9:SCCB_ReadReg	16	static
+../Core/Src/sccb.c:354:9:SCCB_WriteHandle_16Bit	8	static
+../Core/Src/sccb.c:383:9:SCCB_WriteReg_16Bit	16	static
+../Core/Src/sccb.c:412:9:SCCB_ReadReg_16Bit	16	static
+../Core/Src/sccb.c:444:9:SCCB_WriteBuffer_16Bit	24	static
